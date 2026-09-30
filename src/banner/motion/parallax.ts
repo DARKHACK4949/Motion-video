@@ -7,8 +7,9 @@ export const DEPTH = {
   atmosphere: 0.3,
   decor: 0.55,
   text: 0.12,
-  products: 1,
-  foreground: 1.5,
+  /** Stage, plinth and products share one depth so they stay physically glued together. */
+  products: 0.45,
+  foreground: 1.3,
 } as const;
 
 /**

@@ -1,17 +1,8 @@
 import { staticFile } from "remotion";
-import { EASE, SPRING } from "../motion/easing";
+import { EASE } from "../motion/easing";
 import { DEPTH } from "../motion/parallax";
 import { Track } from "../motion/pose";
-import {
-  breathe,
-  enterFromLeft,
-  exitTo,
-  exitToBottom,
-  microRotate,
-  settleSpring,
-  subtleDrift,
-  subtleFloat,
-} from "../motion/presets";
+import { anticipateExit, arcIn, breathe, dropIn, enterFrom, microRotate, subtleDrift } from "../motion/presets";
 import { T } from "./timeline";
 
 /**
@@ -27,80 +18,102 @@ export type ProductConfig = {
   alt: string;
   /** Layout box (px). The image is contained inside, centred on `rest.x/y`. */
   box: { w: number; h: number };
-  /** Resting pose in the hero composition (centre point, degrees, scale). */
+  /** Resting pose on the plinth (centre point, degrees, scale). */
   rest: { x: number; y: number; rotate: number; scale: number };
+  /** Rotate/scale pivot. Standing products pivot on their base so idle motion stays grounded. */
+  origin: string;
   zIndex: number;
   depth: number;
-  shadow: { drop: string; contact: { w: number; h: number; dy: number; opacity: number } };
+  /** Floor contact shadow (relative to the resting centre). */
+  shadow: { w: number; h: number; dy: number; opacity: number };
+  drop: string;
+  /** Frame of touchdown on the plinth (drives dust + stage pulse). */
+  land?: number;
   enter: Track;
   idle: Track[];
   exit: Track;
 };
 
+const DROP = "drop-shadow(0 14px 16px rgba(10,30,90,0.22))";
+const BASE = "50% 100%";
+
 export const PRODUCTS: ProductConfig[] = [
   {
-    id: "tablet-strip",
-    src: staticFile("products/tablet-strip.png"),
-    alt: "Tablet blister strip",
-    box: { w: 250, h: 170 },
-    rest: { x: 672, y: 416, rotate: -14, scale: 1 },
+    id: "vitamin-d3",
+    src: staticFile("products/vitamin-d3.png"),
+    alt: "Vitamin D3",
+    box: { w: 176, h: 222 },
+    rest: { x: 1152, y: 322, rotate: 0, scale: 1 },
+    origin: BASE,
     zIndex: 22,
-    depth: DEPTH.products * 0.9,
-    shadow: { drop: "drop-shadow(0 10px 12px rgba(18,44,110,0.20))", contact: { w: 200, h: 26, dy: 70, opacity: 0.35 } },
-    enter: enterFromLeft({ start: T.strip.in, duration: T.strip.inDur, distance: 820, offset: 40, rotateFrom: -34, scaleFrom: 0.94, fade: 0, motion: { ease: EASE.outQuint } }),
-    idle: [subtleDrift({ amplitude: 3, cycles: 2, phase: 0.3, start: T.strip.in + T.strip.inDur, ramp: T.idleRamp })],
-    exit: exitTo({ start: T.strip.out, duration: T.strip.outDur, to: { x: -300, y: 330, rotate: -22 }, ease: EASE.inCubic, fadeAt: 0.7 }),
-  },
-  {
-    id: "dolo-650",
-    src: staticFile("products/dolo-650.png"),
-    alt: "Dolo 650",
-    box: { w: 230, h: 300 },
-    rest: { x: 800, y: 286, rotate: -5, scale: 1 },
-    zIndex: 40,
     depth: DEPTH.products,
-    shadow: { drop: "drop-shadow(0 20px 22px rgba(18,44,110,0.26))", contact: { w: 190, h: 30, dy: 148, opacity: 0.45 } },
-    enter: settleSpring({ start: T.dolo.in, duration: T.dolo.inDur, from: { x: -360, y: 250, rotate: -16, scale: 0.88 }, fade: 5, feel: SPRING.product }),
-    idle: [microRotate({ amplitude: 1, cycles: 3, phase: 0, start: T.dolo.in + T.dolo.inDur, ramp: T.idleRamp })],
-    exit: exitTo({ start: T.dolo.out, duration: T.dolo.outDur, to: { x: 360, y: -560, rotate: 16, scale: 0.96 }, ease: EASE.inQuart, fadeAt: 1 }),
+    shadow: { w: 170, h: 24, dy: 108, opacity: 0.5 },
+    drop: DROP,
+    land: T.vitaminD3.in + T.vitaminD3.fall,
+    enter: dropIn({ start: T.vitaminD3.in, fall: T.vitaminD3.fall, from: { x: 30, y: -420, rotate: 10 }, bounce: 5 }),
+    idle: [breathe({ amplitude: 0.01, cycles: 4, phase: 0.8, start: T.vitaminD3.in + T.vitaminD3.fall + 10, ramp: T.idleRamp })],
+    exit: anticipateExit({ start: T.vitaminD3.out, duration: T.vitaminD3.outDur, counter: { x: -6, y: 5 }, to: { x: 480, y: -40, rotate: 20 } }),
   },
   {
     id: "cetirizine",
     src: staticFile("products/cetirizine.png"),
     alt: "Cetirizine",
-    box: { w: 220, h: 290 },
-    rest: { x: 990, y: 262, rotate: 4, scale: 1 },
-    zIndex: 32,
-    depth: DEPTH.products * 0.95,
-    shadow: { drop: "drop-shadow(0 18px 20px rgba(18,44,110,0.24))", contact: { w: 180, h: 28, dy: 142, opacity: 0.42 } },
-    enter: settleSpring({ start: T.cetirizine.in, duration: T.cetirizine.inDur, from: { x: 560, y: -24, rotate: 14, scale: 0.9 }, fade: 3, feel: SPRING.heavy }),
-    idle: [subtleFloat({ amplitude: 4, cycles: 3, phase: 1.3, start: T.cetirizine.in + T.cetirizine.inDur, ramp: T.idleRamp })],
-    exit: exitTo({ start: T.cetirizine.out, duration: T.cetirizine.outDur, to: { x: 200, y: -560, rotate: 12, scale: 0.96 }, ease: EASE.inQuart, fadeAt: 1 }),
+    box: { w: 208, h: 278 },
+    rest: { x: 1012, y: 302, rotate: 0, scale: 1 },
+    origin: BASE,
+    zIndex: 26,
+    depth: DEPTH.products,
+    shadow: { w: 196, h: 28, dy: 136, opacity: 0.55 },
+    drop: DROP,
+    land: T.cetirizine.in + T.cetirizine.fall,
+    enter: dropIn({ start: T.cetirizine.in, fall: T.cetirizine.fall, from: { x: 300, y: -440, rotate: 14, scale: 0.9 }, bounce: 6 }),
+    idle: [microRotate({ amplitude: 0.7, cycles: 3, phase: 1.9, start: T.cetirizine.in + T.cetirizine.fall + 10, ramp: T.idleRamp })],
+    exit: anticipateExit({ start: T.cetirizine.out, duration: T.cetirizine.outDur, counter: { y: 7 }, to: { x: 160, y: -560, rotate: 10 } }),
   },
   {
-    id: "vitamin-d3",
-    src: staticFile("products/vitamin-d3.png"),
-    alt: "Vitamin D3",
-    box: { w: 190, h: 232 },
-    rest: { x: 1150, y: 304, rotate: 7, scale: 1 },
-    zIndex: 26,
-    depth: DEPTH.products * 0.8,
-    shadow: { drop: "drop-shadow(0 16px 18px rgba(18,44,110,0.22))", contact: { w: 160, h: 24, dy: 114, opacity: 0.38 } },
-    enter: settleSpring({ start: T.vitaminD3.in, duration: T.vitaminD3.inDur, from: { x: 280, y: -400, rotate: 22, scale: 0.9 }, fade: 3, feel: SPRING.product }),
-    idle: [breathe({ amplitude: 0.012, cycles: 4, phase: 0.8, start: T.vitaminD3.in + T.vitaminD3.inDur, ramp: T.idleRamp })],
-    exit: exitTo({ start: T.vitaminD3.out, duration: T.vitaminD3.outDur, to: { x: 520, y: -70, rotate: 18 }, ease: EASE.inCubic, fadeAt: 1 }),
+    id: "dolo-650",
+    src: staticFile("products/dolo-650.png"),
+    alt: "Dolo 650",
+    box: { w: 224, h: 295 },
+    rest: { x: 858, y: 312, rotate: 0, scale: 1 },
+    origin: BASE,
+    zIndex: 34,
+    depth: DEPTH.products,
+    shadow: { w: 210, h: 30, dy: 144, opacity: 0.6 },
+    drop: DROP,
+    land: T.dolo.in + T.dolo.fall,
+    enter: dropIn({ start: T.dolo.in, fall: T.dolo.fall, from: { x: -300, y: -460, rotate: -16, scale: 0.88 }, bounce: 8 }),
+    idle: [microRotate({ amplitude: 1, cycles: 3, phase: 0, start: T.dolo.in + T.dolo.fall + 10, ramp: T.idleRamp })],
+    exit: anticipateExit({ start: T.dolo.out, duration: T.dolo.outDur, counter: { x: -4, y: 8, rotate: -2 }, to: { x: 380, y: -580, rotate: 16 } }),
+  },
+  {
+    id: "tablet-strip",
+    src: staticFile("products/tablet-strip.png"),
+    alt: "Tablet blister strip",
+    box: { w: 214, h: 144 },
+    rest: { x: 728, y: 466, rotate: -18, scale: 1 },
+    origin: "50% 50%",
+    zIndex: 40,
+    depth: DEPTH.products,
+    shadow: { w: 220, h: 24, dy: 50, opacity: 0.45 },
+    drop: "drop-shadow(0 8px 10px rgba(10,30,90,0.22))",
+    enter: arcIn({ start: T.strip.in, duration: T.strip.inDur, from: { x: -900, y: 40, rotate: -200, scale: 0.9 }, lift: 160 }),
+    idle: [subtleDrift({ amplitude: 2.5, cycles: 2, phase: 0.3, start: T.strip.in + T.strip.inDur, ramp: T.idleRamp })],
+    exit: anticipateExit({ start: T.strip.out, duration: T.strip.outDur, counter: { x: 8, y: -4 }, to: { x: -360, y: 260, rotate: -40 }, ease: EASE.inCubic }),
   },
   {
     id: "thermometer",
     src: staticFile("products/thermometer.png"),
     alt: "Digital thermometer",
-    box: { w: 350, h: 92 },
-    rest: { x: 1012, y: 452, rotate: -9, scale: 1 },
-    zIndex: 50,
-    depth: DEPTH.products * 1.1,
-    shadow: { drop: "drop-shadow(0 10px 10px rgba(18,44,110,0.24))", contact: { w: 280, h: 18, dy: 40, opacity: 0.3 } },
-    enter: settleSpring({ start: T.thermometer.in, duration: T.thermometer.inDur, from: { x: 420, y: 220, rotate: -26, scale: 0.94 }, fade: 3, feel: SPRING.heavy }),
-    idle: [microRotate({ amplitude: 1.3, cycles: 2, phase: 2.1, start: T.thermometer.in + T.thermometer.inDur, ramp: T.idleRamp })],
-    exit: exitToBottom({ start: T.thermometer.out, duration: T.thermometer.outDur, distance: 260, offset: 440, rotateTo: 10, ease: EASE.inCubic, fadeAt: 1 }),
+    box: { w: 340, h: 88 },
+    rest: { x: 1040, y: 478, rotate: -6, scale: 1 },
+    origin: "50% 50%",
+    zIndex: 44,
+    depth: DEPTH.products,
+    shadow: { w: 300, h: 18, dy: 30, opacity: 0.4 },
+    drop: "drop-shadow(0 8px 10px rgba(10,30,90,0.22))",
+    enter: enterFrom({ start: T.thermometer.in, duration: T.thermometer.inDur, from: { x: 520, y: 30, rotate: -24 }, motion: { ease: EASE.outQuint }, fade: 0 }),
+    idle: [microRotate({ amplitude: 1.2, cycles: 2, phase: 2.1, start: T.thermometer.in + T.thermometer.inDur, ramp: T.idleRamp })],
+    exit: anticipateExit({ start: T.thermometer.out, duration: T.thermometer.outDur, counter: { x: -10 }, to: { x: 460, y: 180, rotate: 12 }, ease: EASE.inCubic }),
   },
 ];

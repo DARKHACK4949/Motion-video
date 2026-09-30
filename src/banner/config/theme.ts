@@ -27,15 +27,19 @@ export const COLORS = {
 
   offerFrom: "#FF3D6E",
   offerTo: "#E0165A",
-  ctaFrom: "#2E6BFF",
-  ctaTo: "#1846D6",
+  ctaFrom: "#14285E",
+  ctaTo: "#0A1A45",
+
+  stageHi: "#4F8BFF",
+  stageMid: "#2C62F5",
+  stageLo: "#1437C4",
 
   productShadow: "rgba(18, 44, 110, 0.28)",
 } as const;
 
 export const TYPE = {
   family: "'Plus Jakarta Sans', 'Liberation Sans', Arial, sans-serif",
-  headline: { size: 70, weight: 800, lineHeight: 1.02, tracking: -2.2 },
+  headline: { size: 68, weight: 800, lineHeight: 1.02, tracking: -2.2 },
   support: { size: 21, weight: 500, lineHeight: 1.38, tracking: -0.1 },
   cta: { size: 20, weight: 700, tracking: -0.2 },
   offerSmall: { size: 19, weight: 800, tracking: 1.5 },

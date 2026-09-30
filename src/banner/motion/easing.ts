@@ -14,6 +14,8 @@ export const EASE = {
   /** Symmetric moves. */
   inOutSine: Easing.bezier(0.37, 0, 0.63, 1),
   inOutCubic: Easing.bezier(0.65, 0, 0.35, 1),
+  /** Controlled overshoot (~6%) for small graphic pops. */
+  outBackSoft: Easing.bezier(0.34, 1.45, 0.64, 1),
 } as const;
 
 export type EaseFn = (t: number) => number;

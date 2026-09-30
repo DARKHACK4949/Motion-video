@@ -7,6 +7,7 @@ import { Headline } from "./components/Headline";
 import { MedicalDecor } from "./components/MedicalDecor";
 import { OfferBadge } from "./components/OfferBadge";
 import { ProductGroup } from "./components/ProductGroup";
+import { Stage } from "./components/Stage";
 
 const useFonts = () => {
   const [handle] = useState(() => delayRender("Loading Plus Jakarta Sans"));
@@ -21,7 +22,8 @@ const useFonts = () => {
  * Layer order (back → front):
  *  1 Background (gradient, atmosphere, waves)   z 0
  *  2 MedicalDecor back / mid                     z 2–5
- *  3 Story decor behind products                 z 15
+ *  3 Stage (disc, rings, plinth, sparkles)       z 10
+ *    Story decor behind products                 z 15
  *  4 Product packshots                           z 20–50
  *  5 Story decor in front of products            z 60
  *  6 Headline + supporting copy                  z 70
@@ -36,6 +38,7 @@ export const HealthcareBanner: React.FC = () => {
       <Background />
       <MedicalDecor layer="back" />
       <MedicalDecor layer="mid" />
+      <Stage />
       <MedicalDecor layer="storyBack" />
       <ProductGroup />
       <MedicalDecor layer="storyFront" />

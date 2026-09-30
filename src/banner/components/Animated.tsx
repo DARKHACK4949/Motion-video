@@ -18,6 +18,8 @@ type Props = {
   h: number;
   zIndex?: number;
   filter?: string;
+  /** CSS transform-origin (rotation / scale pivot). */
+  origin?: string;
   trail?: TrailOptions | false;
   children: React.ReactNode;
 };
@@ -30,12 +32,12 @@ const transformOf = (p: Pose, w: number, h: number) =>
  * a few sub-frame samples are drawn behind it with falling opacity — a cheap directional motion blur
  * that only exists while the object is actually moving quickly.
  */
-export const Animated: React.FC<Props> = ({ poseAt, w, h, zIndex, filter, trail, children }) => {
+export const Animated: React.FC<Props> = ({ poseAt, w, h, zIndex, filter, origin = "50% 50%", trail, children }) => {
   const frame = useCurrentFrame();
   const p = poseAt(frame);
   if (p.opacity <= 0.001) return null;
 
-  const base: React.CSSProperties = { position: "absolute", left: 0, top: 0, width: w, height: h, transformOrigin: "50% 50%", willChange: "transform" };
+  const base: React.CSSProperties = { position: "absolute", left: 0, top: 0, width: w, height: h, transformOrigin: origin, willChange: "transform" };
 
   let ghosts: React.ReactNode[] = [];
   if (trail) {

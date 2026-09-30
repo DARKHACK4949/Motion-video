@@ -162,3 +162,130 @@ export const flyThrough =
   };
 
 export type { Pose };
+
+/* ------------------------------------------------------------------ */
+/* Physical entrances / exits (v2)                                     */
+/* ------------------------------------------------------------------ */
+
+const inQuad = (t: number) => t * t;
+
+/**
+ * Gravity drop onto a surface: horizontal travel decelerates while the fall accelerates, then a
+ * single small rebound sells the weight (no rubbery squash — the packshot is never deformed).
+ */
+export const dropIn =
+  ({
+    start,
+    fall,
+    settle = 10,
+    from,
+    bounce = 7,
+    wobble = 2.5,
+  }: {
+    start: number;
+    /** Frames from release to touchdown. */
+    fall: number;
+    /** Frames of rebound after touchdown. */
+    settle?: number;
+    from: FromPose;
+    /** Rebound height in px. */
+    bounce?: number;
+    /** Rotational overshoot on touchdown (deg). */
+    wobble?: number;
+  }): Track =>
+  (f) => {
+    if (f < start) return pose({ x: from.x ?? 0, y: from.y ?? 0, rotate: from.rotate ?? 0, scale: from.scale ?? 1, opacity: 0 });
+    const t = Math.min(1, (f - start) / fall);
+    const ex = EASE.outCubic(t);
+    let x = (from.x ?? 0) * (1 - ex);
+    let y = (from.y ?? 0) * (1 - inQuad(t));
+    let rotate = (from.rotate ?? 0) * (1 - ex);
+    const scale = lerp(from.scale ?? 1, 1, ex);
+    if (f > start + fall) {
+      const u = Math.min(1, (f - start - fall) / settle);
+      const hop = Math.sin(Math.PI * u) * (1 - u * 0.35);
+      y -= bounce * hop;
+      rotate += -Math.sign(from.rotate ?? 1) * wobble * Math.sin(Math.PI * u) * (1 - u);
+      x += 0;
+    }
+    return pose({ x, y, rotate, scale, opacity: progress(f, start, 3) });
+  };
+
+/** Arc entrance (thrown object): eased travel along x with a parabolic lift along y. */
+export const arcIn =
+  ({ start, duration, from, lift = 120, ease = EASE.outQuint }: { start: number; duration: number; from: FromPose; lift?: number; ease?: EaseFn }): Track =>
+  (f) => {
+    if (f < start) return pose({ opacity: 0 });
+    const p = progress(f, start, duration, ease);
+    return pose({
+      x: (from.x ?? 0) * (1 - p),
+      y: (from.y ?? 0) * (1 - p) - lift * Math.sin(Math.PI * p) * (1 - p),
+      rotate: (from.rotate ?? 0) * (1 - p),
+      scale: lerp(from.scale ?? 1, 1, p),
+    });
+  };
+
+/**
+ * Exit with anticipation: a short counter-move (wind-up) followed by an accelerating whip out.
+ */
+export const anticipateExit =
+  ({
+    start,
+    windup = 5,
+    duration,
+    counter = { y: 7 },
+    to,
+    ease = EASE.inQuart,
+  }: {
+    start: number;
+    windup?: number;
+    duration: number;
+    counter?: FromPose;
+    to: FromPose;
+    ease?: EaseFn;
+  }): Track =>
+  (f) => {
+    if (f <= start) return pose({});
+    const w = EASE.inOutSine(Math.min(1, (f - start) / windup));
+    const p = progress(f, start + windup, duration, ease);
+    const hold = 1 - p;
+    return pose({
+      x: (counter.x ?? 0) * w * hold + (to.x ?? 0) * p,
+      y: (counter.y ?? 0) * w * hold + (to.y ?? 0) * p,
+      rotate: (counter.rotate ?? 0) * w * hold + (to.rotate ?? 0) * p,
+      scale: lerp(1, to.scale ?? 1, p),
+      opacity: f >= start + windup + duration ? 0 : 1,
+    });
+  };
+
+/** Burst from a shared origin out to the element's resting spot (used for capsules popping out of the stage). */
+export const burstFrom =
+  ({ start, duration, origin, spin = 180, ease = EASE.outExpo }: { start: number; duration: number; origin: FromPose; spin?: number; ease?: EaseFn }): Track =>
+  (f) => {
+    if (f < start) return pose({ opacity: 0 });
+    const p = progress(f, start, duration, ease);
+    return pose({
+      x: (origin.x ?? 0) * (1 - p),
+      y: (origin.y ?? 0) * (1 - p),
+      rotate: spin * (1 - p),
+      scale: lerp(0.3, 1, p),
+      opacity: progress(f, start, 4),
+    });
+  };
+
+/** Scale-pop from zero (garnish / sparkles). */
+export const growIn =
+  ({ start, duration, rotateFrom = 0, ease = EASE.outBackSoft }: { start: number; duration: number; rotateFrom?: number; ease?: EaseFn }): Track =>
+  (f) => {
+    if (f < start) return pose({ scale: 0, opacity: 0 });
+    const p = progress(f, start, duration, ease);
+    return pose({ scale: Math.max(0, p), rotate: rotateFrom * (1 - p), opacity: progress(f, start, 4) });
+  };
+
+/** Scale to zero (reverse of growIn). */
+export const shrinkOut =
+  ({ start, duration, rotateTo = 0, ease = EASE.inCubic }: { start: number; duration: number; rotateTo?: number; ease?: EaseFn }): Track =>
+  (f) => {
+    const p = progress(f, start, duration, ease);
+    return pose({ scale: 1 - p, rotate: rotateTo * p, opacity: p >= 1 ? 0 : 1 });
+  };

@@ -9,6 +9,18 @@ A deterministic motion-graphics banner for a medical quick-commerce app, built w
 | Duration | 6 s / 180 frames, seamless loop (frame 180 ≡ frame 0) |
 | Outputs | `output/healthcare-banner.mp4` (H.264, yuv420p) · `output/healthcare-banner.webm` (VP9) |
 
+## Creative concept
+
+The products are the hero, and they are **grounded**. A brand-blue stage disc pops in with a ripple
+and a 3D plinth rises under it. Products are thrown or dropped onto the plinth with real weight: a
+gravity fall, one small rebound, dust puffs, a contact shadow that tightens on touchdown, and a stage
+pulse on every impact. The headline lands like a quick-commerce banner: "Healthcare." rises out of a
+mask, then a highlight bar wipes in and "Delivered." punches up inside it. Capsules burst out of the
+stage into orbit, leaves grow out from behind the products, and sparkles twinkle. The offer is a
+sticker seal (0.8 → 1.05 → 1) and the CTA gets one shine sweep. The exit is an anticipation wave:
+each product dips, then whips out with speed streaks and motion trails. The stage then collapses with
+a ripple back to the clean opening frame.
+
 ## Product assets
 
 Drop the real transparent packshots into `public/products/` using these exact names:
@@ -52,12 +64,14 @@ src/banner/
   motion/
     pose.ts                 Pose / Track primitives (pure functions of frame)
     easing.ts               named cubic-beziers + analytic spring (sub-frame sampleable)
-    presets.ts              enterFromLeft/Right/Top/Bottom, settleSpring, softPop, exitTo*,
+    presets.ts              enterFromLeft/Right/Top/Bottom, settleSpring, softPop, exitTo*, dropIn, arcIn,
+                            anticipateExit, burstFrom, growIn, shrinkOut,
                             subtleFloat, microRotate, subtleDrift, breathe, ambientFloat, flyThrough
     loop.ts                 loopSin — integer cycles only, guarantees seamless ambient motion
     parallax.ts             depth layers + loop-safe camera drift
   components/
-    Background, MedicalDecor, Product, ProductGroup, Headline, OfferBadge, CTA,
+    Background, Stage (disc, rings, plinth, ripples, streaks, sparkles), MedicalDecor,
+    Product (+ floor shadow, landing dust), ProductGroup, Headline, OfferBadge, CTA,
     Animated (pose renderer + velocity-based motion trail), shapes/
 ```
 

@@ -1,9 +1,11 @@
-/** Fixed UI positions (px on the 1280×540 canvas). Products & decor live in products.ts / decor.ts. */
+/** Fixed positions (px on the 1280×540 canvas). */
 export const LAYOUT = {
   /** Keep text & CTA inside this safe area (left column). */
   safe: { left: 72, top: 48, right: 1232, bottom: 492 },
-  headline: { x: 72, y: 116, width: 520 },
-  support: { x: 74, gap: 18 },
-  cta: { x: 74, y: 388, w: 206, h: 58 },
-  offer: { x: 1162, y: 96, w: 164, h: 106, rotate: -8 },
+  headline: { x: 72, y: 112, width: 560 },
+  support: { gap: 20 },
+  cta: { x: 74, y: 382, w: 214, h: 58 },
+  offer: { x: 1186, y: 98, size: 138, rotate: -12 },
+  stage: { x: 962, y: 276, r: 246 },
+  plinth: { x: 962, y: 454, rx: 262, ry: 40, depth: 26 },
 } as const;
