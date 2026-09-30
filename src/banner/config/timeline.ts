@@ -6,7 +6,7 @@
  *  0.50  tablet strip is thrown in · capsules burst out of the stage
  *  1.00  headline: "Healthcare." rises · highlight bar wipes · "Delivered." punches in
  *  1.60  Dolo 650 + Cetirizine drop onto the plinth (thud · dust · stage pulse)
- *  2.20  Vitamin D3 drops in the back · thermometer slides in · leaves pop from behind
+ *  2.20  Vitamin D3 drops in the back · thermometer slides in
  *  2.80  hero hold — sparkles, ring rotation
  *  3.50  offer seal pops (0.8 → 1.05 → 1) · CTA rises, one shine sweep
  *  4.00  micro-motion idle
@@ -30,7 +30,6 @@ export const T = {
   vitaminD3: { in: 66, fall: 12, out: 134, outDur: 12 },
   thermometer: { in: 70, inDur: 18, out: 139, outDur: 12 },
 
-  leaves: { in: 78, stagger: 4, dur: 16, out: 136, outDur: 10 },
   sparkles: [92, 101, 112, 124, 131],
 
   offer: { in: 105, inDur: 14, out: 146, outDur: 10 },

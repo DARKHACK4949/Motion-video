@@ -16,7 +16,7 @@ and a 3D plinth rises under it. Products are thrown or dropped onto the plinth w
 gravity fall, one small rebound, dust puffs, a contact shadow that tightens on touchdown, and a stage
 pulse on every impact. The headline lands like a quick-commerce banner: "Healthcare." rises out of a
 mask, then a highlight bar wipes in and "Delivered." punches up inside it. Capsules burst out of the
-stage into orbit, leaves grow out from behind the products, and sparkles twinkle. The offer is a
+stage into orbit and sparkles twinkle. The offer is a
 sticker seal (0.8 → 1.05 → 1) and the CTA gets one shine sweep. The exit is an anticipation wave:
 each product dips, then whips out with speed streaks and motion trails. The stage then collapses with
 a ripple back to the clean opening frame.

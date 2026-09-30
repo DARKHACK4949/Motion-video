@@ -1,7 +1,7 @@
 import { EASE } from "../motion/easing";
 import { DEPTH } from "../motion/parallax";
 import { stack, Track } from "../motion/pose";
-import { ambientFloat, burstFrom, exitTo, growIn, microRotate, shrinkOut, subtleFloat } from "../motion/presets";
+import { ambientFloat, burstFrom, exitTo, subtleFloat } from "../motion/presets";
 import { LAYOUT } from "./layout";
 import { T } from "./timeline";
 
@@ -71,23 +71,6 @@ const orbit = (id: string, kind: DecorKind, x: number, y: number, rotate: number
   };
 };
 
-/** Leaf tucked behind the product group — grows out like a garnish. */
-const garnish = (id: string, x: number, y: number, rotate: number, size: number, i: number): DecorSpec => ({
-  id,
-  kind: "leaf",
-  layer: "storyBack",
-  x,
-  y,
-  rotate,
-  size,
-  depth: DEPTH.products,
-  track: stack(
-    growIn({ start: T.leaves.in + i * T.leaves.stagger, duration: T.leaves.dur, rotateFrom: -35 }),
-    microRotate({ amplitude: 3, cycles: 2, phase: i * 1.3, start: T.leaves.in + i * T.leaves.stagger + T.leaves.dur, ramp: 12 }),
-    shrinkOut({ start: T.leaves.out + i * 2, duration: T.leaves.outDur, rotateTo: 40 }),
-  ),
-});
-
 export const DECOR: DecorSpec[] = [
   /* ---------------- back: big soft crosses ---------------- */
   { id: "bx1", kind: "cross", layer: "back", x: 150, y: 88, rotate: 8, size: 92, depth: DEPTH.background, blur: 5, opacity: 0.8, track: ambientFloat({ ax: 4, ay: 5, ar: 3, phase: 0.2 }) },
@@ -107,12 +90,6 @@ export const DECOR: DecorSpec[] = [
   orbit("c4", "capsule-red", 1034, 60, 20, 44, 3, 1.2),
   orbit("c5", "pill", 1246, 392, 0, 30, 4, 4.4),
 
-  /* ---------------- 2.6 s: leaf garnish behind the products ---------------- */
-  garnish("l1", 790, 196, -48, 112, 0),
-  garnish("l2", 1226, 268, 52, 104, 1),
-  garnish("l3", 1008, 178, 8, 86, 2),
-
   /* ---------------- front: blurred edge elements (loop-periodic) ---------------- */
-  { id: "fl1", kind: "leaf", layer: "front", x: 30, y: 36, rotate: 32, size: 112, depth: DEPTH.foreground, blur: 3, opacity: 0.95, track: ambientFloat({ ax: 4, ay: 5, ar: 3, phase: 0.9 }) },
   { id: "fl2", kind: "capsule-blue", layer: "front", x: 26, y: 512, rotate: -30, size: 70, depth: DEPTH.foreground, blur: 2.5, track: ambientFloat({ ax: 4, ay: 4, ar: 4, phase: 3.4 }) },
 ];

@@ -24,8 +24,13 @@ export type ProductConfig = {
   origin: string;
   zIndex: number;
   depth: number;
-  /** Floor contact shadow (relative to the resting centre). */
-  shadow: { w: number; h: number; dy: number; opacity: number };
+  /**
+   * Grounding shadows (relative to the resting centre):
+   *  - contact ellipse `w`×`h` at `dy` (where the product touches the plinth)
+   *  - `cast`: a silhouette of the packshot projected onto the plinth, away from the key light
+   *    ("standing" = squashed + skewed behind the product, "lying" = offset beneath it)
+   */
+  shadow: { w: number; h: number; dy: number; opacity: number; cast: "standing" | "lying" };
   drop: string;
   /** Frame of touchdown on the plinth (drives dust + stage pulse). */
   land?: number;
@@ -34,7 +39,8 @@ export type ProductConfig = {
   exit: Track;
 };
 
-const DROP = "drop-shadow(0 14px 16px rgba(10,30,90,0.22))";
+/** Tight edge shadow only — the grounding comes from the contact + cast shadows. */
+const DROP = "drop-shadow(0 2px 3px rgba(10,30,90,0.28))";
 const BASE = "50% 100%";
 
 export const PRODUCTS: ProductConfig[] = [
@@ -47,7 +53,7 @@ export const PRODUCTS: ProductConfig[] = [
     origin: BASE,
     zIndex: 20,
     depth: DEPTH.products,
-    shadow: { w: 190, h: 26, dy: 120, opacity: 0.5 },
+    shadow: { w: 196, h: 16, dy: 126, opacity: 0.7, cast: "standing" },
     drop: DROP,
     land: T.vitaminD3.in + T.vitaminD3.fall,
     enter: dropIn({ start: T.vitaminD3.in, fall: T.vitaminD3.fall, from: { x: 30, y: -420, rotate: 10 }, bounce: 5 }),
@@ -63,7 +69,7 @@ export const PRODUCTS: ProductConfig[] = [
     origin: BASE,
     zIndex: 22,
     depth: DEPTH.products,
-    shadow: { w: 176, h: 26, dy: 122, opacity: 0.55 },
+    shadow: { w: 184, h: 16, dy: 125, opacity: 0.7, cast: "standing" },
     drop: DROP,
     land: T.cetirizine.in + T.cetirizine.fall,
     enter: dropIn({ start: T.cetirizine.in, fall: T.cetirizine.fall, from: { x: 300, y: -440, rotate: 14, scale: 0.9 }, bounce: 6 }),
@@ -79,7 +85,7 @@ export const PRODUCTS: ProductConfig[] = [
     origin: BASE,
     zIndex: 34,
     depth: DEPTH.products,
-    shadow: { w: 270, h: 28, dy: 88, opacity: 0.6 },
+    shadow: { w: 270, h: 16, dy: 90, opacity: 0.7, cast: "standing" },
     drop: DROP,
     land: T.dolo.in + T.dolo.fall,
     enter: dropIn({ start: T.dolo.in, fall: T.dolo.fall, from: { x: -300, y: -460, rotate: -16, scale: 0.88 }, bounce: 8 }),
@@ -95,8 +101,8 @@ export const PRODUCTS: ProductConfig[] = [
     origin: "50% 50%",
     zIndex: 30,
     depth: DEPTH.products,
-    shadow: { w: 200, h: 22, dy: 58, opacity: 0.45 },
-    drop: "drop-shadow(0 8px 10px rgba(10,30,90,0.22))",
+    shadow: { w: 196, h: 16, dy: 60, opacity: 0.5, cast: "lying" },
+    drop: DROP,
     enter: arcIn({ start: T.strip.in, duration: T.strip.inDur, from: { x: -900, y: 40, rotate: -200, scale: 0.9 }, lift: 160 }),
     idle: [subtleDrift({ amplitude: 2.5, cycles: 2, phase: 0.3, start: T.strip.in + T.strip.inDur, ramp: T.idleRamp })],
     exit: anticipateExit({ start: T.strip.out, duration: T.strip.outDur, counter: { x: 8, y: -4 }, to: { x: -360, y: 260, rotate: -40 }, ease: EASE.inCubic }),
@@ -110,8 +116,8 @@ export const PRODUCTS: ProductConfig[] = [
     origin: "50% 50%",
     zIndex: 40,
     depth: DEPTH.products,
-    shadow: { w: 230, h: 18, dy: 34, opacity: 0.4 },
-    drop: "drop-shadow(0 8px 10px rgba(10,30,90,0.22))",
+    shadow: { w: 220, h: 12, dy: 34, opacity: 0.45, cast: "lying" },
+    drop: DROP,
     enter: enterFrom({ start: T.thermometer.in, duration: T.thermometer.inDur, from: { x: 520, y: 30, rotate: -24 }, motion: { ease: EASE.outQuint }, fade: 0 }),
     idle: [microRotate({ amplitude: 1.2, cycles: 2, phase: 2.1, start: T.thermometer.in + T.thermometer.inDur, ramp: T.idleRamp })],
     exit: anticipateExit({ start: T.thermometer.out, duration: T.thermometer.outDur, counter: { x: -10 }, to: { x: 460, y: 180, rotate: 12 }, ease: EASE.inCubic }),
