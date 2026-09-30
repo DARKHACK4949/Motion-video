@@ -159,10 +159,6 @@ export const Stage: React.FC = () => {
                 transform: `translate(${(f * 0.08).toFixed(3)}px, 0)`,
               }}
             />
-            {/* big soft cross watermark */}
-            <svg viewBox="0 0 100 100" width="300" height="300" style={{ position: "absolute", left: S.r - 150, top: S.r - 190, opacity: 0.08 }}>
-              <path d="M38 8h24a6 6 0 0 1 6 6v18h18a6 6 0 0 1 6 6v24a6 6 0 0 1-6 6H68v18a6 6 0 0 1-6 6H38a6 6 0 0 1-6-6V68H14a6 6 0 0 1-6-6V38a6 6 0 0 1 6-6h18V14a6 6 0 0 1 6-6z" fill="#fff" />
-            </svg>
             <Streaks start={T.streaksIn} angle={-28} />
             <Streaks start={T.exitStreaks} angle={-50} />
           </div>

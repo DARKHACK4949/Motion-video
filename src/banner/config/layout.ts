@@ -7,5 +7,5 @@ export const LAYOUT = {
   cta: { x: 74, y: 382, w: 214, h: 58 },
   offer: { x: 1186, y: 98, size: 138, rotate: -12 },
   stage: { x: 962, y: 276, r: 246 },
-  plinth: { x: 962, y: 454, rx: 262, ry: 40, depth: 26 },
+  plinth: { x: 952, y: 456, rx: 286, ry: 40, depth: 26 },
 } as const;

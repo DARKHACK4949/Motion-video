@@ -108,9 +108,9 @@ export const DECOR: DecorSpec[] = [
   orbit("c5", "pill", 1246, 392, 0, 30, 4, 4.4),
 
   /* ---------------- 2.6 s: leaf garnish behind the products ---------------- */
-  garnish("l1", 776, 190, -48, 112, 0),
-  garnish("l2", 1222, 276, 52, 104, 1),
-  garnish("l3", 938, 176, 8, 86, 2),
+  garnish("l1", 790, 196, -48, 112, 0),
+  garnish("l2", 1226, 268, 52, 104, 1),
+  garnish("l3", 1008, 178, 8, 86, 2),
 
   /* ---------------- front: blurred edge elements (loop-periodic) ---------------- */
   { id: "fl1", kind: "leaf", layer: "front", x: 30, y: 36, rotate: 32, size: 112, depth: DEPTH.foreground, blur: 3, opacity: 0.95, track: ambientFloat({ ax: 4, ay: 5, ar: 3, phase: 0.9 }) },

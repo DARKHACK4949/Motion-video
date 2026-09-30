@@ -2,7 +2,7 @@
   "name": "healthcare-motion-banner",
   "version": "1.0.0",
   "private": true,
-  "description": "Healthcare. Delivered. — deterministic Remotion motion banner (1280x540, 30fps, 6s seamless loop)",
+  "description": "Healthcare. Delivered. \u2014 deterministic Remotion motion banner (1280x540, 30fps, 6s seamless loop)",
   "scripts": {
     "studio": "remotion studio src/index.ts",
     "placeholders": "node scripts/make-placeholders.mjs",
@@ -10,7 +10,8 @@
     "render:webm": "remotion render src/index.ts HealthcareBanner output/healthcare-banner.webm --codec=vp9 --crf=24",
     "render": "npm run render:mp4 && npm run render:webm",
     "verify:loop": "node scripts/verify-loop.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "assets": "node scripts/prepare-assets.mjs"
   },
   "dependencies": {
     "@fontsource/plus-jakarta-sans": "^5.3.0",
